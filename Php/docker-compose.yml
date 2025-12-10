@@ -6,7 +6,7 @@ services:
     ports:
       - "12080:80"
     volumes:
-      - ./Php:/var/php
+      - .:/var/php
     working_dir: /var/php
 
     command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"

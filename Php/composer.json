@@ -1,7 +1,7 @@
 {
   "require" : {
-    "mongodb/mongodb": "^2.1.2",
-    "fakerphp/faker": "^1.23"
+    "ext-simplexml": "*",
+    "ext-xsl": "*"
   },
   "autoload": {
     "psr-4" : {

@@ -8,4 +8,4 @@
 vendor/
 /src/vendor/
 /app/composer.lock
-/composer.lock
+/src/composer.lock
