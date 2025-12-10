@@ -8,8 +8,8 @@
         <div class="meteo-journee">
             <h2>Météo de la journée</h2>
 
-            <!-- Sélection de quelques moments : matin (06h), midi (12h), soir (18h) -->
-            <xsl:apply-templates select="echeance[@hour='06']" mode="moment">
+            <!-- Sélection de quelques moments : matin (6h), midi (12h), soir (18h) -->
+            <xsl:apply-templates select="echeance[@hour='6']" mode="moment">
                 <xsl:with-param name="label" select="'Matin'" />
             </xsl:apply-templates>
 
@@ -35,15 +35,18 @@
             <ul>
                 <!-- Température -->
                 <li>
+                    <xsl:variable name="tempK" select="temperature/level[@val='sol']"/>
+                    <xsl:variable name="tempC" select="number($tempK) - 273.15"/>
+
                     <xsl:choose>
-                        <xsl:when test="temperature/level/@val &lt; 0">
+                        <xsl:when test="$tempC &lt; 0">
                             ❄️ Très froid
                         </xsl:when>
-                        <xsl:when test="temperature/level/@val &lt; 10">
+                        <xsl:when test="$tempC &lt; 10">
                             🧥 Froid
                         </xsl:when>
                         <xsl:otherwise>
-                            🙂 Doux
+                            🙂 Doux (<xsl:value-of select="$tempC"/>° C)
                         </xsl:otherwise>
                     </xsl:choose>
                 </li>
@@ -63,7 +66,7 @@
                 <!-- Risque neige -->
                 <li>
                     <xsl:choose>
-                        <xsl:when test="risque_neige &gt; 0">
+                        <xsl:when test="risque_neige = 'oui'">
                             🌨️ Risque de neige
                         </xsl:when>
                         <xsl:otherwise>
@@ -75,10 +78,10 @@
                 <!-- Vent -->
                 <li>
                     <xsl:choose>
-                        <xsl:when test="vent_rafales/level/@val &gt; 50">
+                        <xsl:when test="vent_rafales/level[@val='10m'] &gt; 50">
                             💨 Vent fort
                         </xsl:when>
-                        <xsl:when test="vent_moyen/level/@val &gt; 20">
+                        <xsl:when test="vent_moyen/level[@val='10m'] &gt; 20">
                             🍃 Vent modéré
                         </xsl:when>
                         <xsl:otherwise>
