@@ -1,0 +1,13 @@
+{
+  "require" : {
+    "mongodb/mongodb": "^2.1.2",
+    "fakerphp/faker": "^1.23"
+  },
+  "autoload": {
+    "psr-4" : {
+
+    }
+  }
+
+
+}

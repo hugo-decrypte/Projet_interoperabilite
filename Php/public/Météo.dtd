@@ -1,0 +1,12 @@
+<!ELEMENT Zone (Id, Libelle, Coordonnées, Type_zone?, Source?, Qualite?)>
+<!ELEMENT Coordonnées (Latitude, Longitude)>
+<!ELEMENT Qualite (Code, Libelle, Couleur)>
+
+<!ELEMENT Id (#PCDATA)>
+<!ELEMENT Libelle (#PCDATA)>
+<!ELEMENT Type_zone (#PCDATA)>
+<!ELEMENT Source (#PCDATA)>
+<!ELEMENT Code (#PCDATA)>
+<!ELEMENT Couleur (#PCDATA)>
+<!ELEMENT Latitude (#PCDATA)>
+<!ELEMENT Longitude (#PCDATA)>
