@@ -1,45 +1,54 @@
 <?php
 
+// Forçage IP de test
 
-// 1. Récupération IP client
-function getClientIp() {
-    //if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
-    //if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-    return $_SERVER['REMOTE_ADDR'];
-}
+//function getClientIP() {
+//    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+//        return $_SERVER['HTTP_CLIENT_IP'];
+//    }
+//    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+//        return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+//    }
+//    return $_SERVER['REMOTE_ADDR'];
+//}
+//
+//$ip = getClientIP();
 
-$ip = getClientIp();
+$ip = "193.50.135.200";
 
-// 2. Appel API de géolocalisation
-$geoUrl = "https://ip-api.com/#" . $ip;
+// 1. API ip-api
+$geoUrl = "http://ip-api.com/json/" . $ip;
 $geoData = json_decode(file_get_contents($geoUrl), true);
 
-// Si l'API échoue ou la ville n'est pas Nancy → prendre les coords de l'IUT
 $coords = [];
 
-if ($geoData["status"] === "success" && $geoData["city"] === "Nancy") {
+if ($geoData && $geoData["status"] === "success" && $geoData["city"] === "Nancy") {
     $coords['lat'] = $geoData["lat"];
     $coords['lon'] = $geoData["lon"];
     $locationSource = "IP déjà localisée à Nancy.";
 } else {
-    // 3. Récupération des coordonnées de l’IUT via Nominatim
-    $iutUrl = "https://nominatim.openstreetmap.org/ui/search.html?q=IUT+Charlemagne,+Nancy&format=json&limit=1";
-    $iutData = json_decode(file_get_contents($iutUrl), true);
+
+    // 2. API Nominatim OpenStreetMap (si pas à Nancy)
+    $opts = array('http' => array('proxy'=> 'tcp://127.0.0.1:8080', 'request_fulluri'=> true),
+            'ssl' => array('verify_peer' => false, 'verify_peer_name' => false));
+
+    $context = stream_context_create($opts);
+
+    $iutUrl = "https://nominatim.openstreetmap.org/search?q=IUT+Charlemagne+Nancy&format=jsonv2&limit=1";
+    $iutData = json_decode(file_get_contents($iutUrl, false, $context), true);
 
     if (!empty($iutData)) {
         $coords['lat'] = $iutData[0]['lat'];
         $coords['lon'] = $iutData[0]['lon'];
         $locationSource = "Votre IP n'est pas à Nancy → coordonnées de l’IUT Charlemagne affichées.";
     } else {
-        $locationSource = "bah là tu fais pas d'effort y a rien";
+        $coords['lat'] = "";
+        $coords['lon'] = "";
+        $locationSource = "Y a rien mon pote, ça marche pas";
     }
 }
 
-// ----------------------
-// 4. Génération HTML
-// ----------------------
 ?>
-
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -54,8 +63,8 @@ if ($geoData["status"] === "success" && $geoData["city"] === "Nancy") {
 <div class="box">
     <p><strong>Adresse IP détectée :</strong> <?= htmlspecialchars($ip) ?></p>
     <p><strong>Message :</strong> <?= htmlspecialchars($locationSource) ?></p>
-    <p><strong>Latitude :</strong> <?= $coords['lat'] ?></p>
-    <p><strong>Longitude :</strong> <?= $coords['lon'] ?></p>
+    <p><strong>Latitude :</strong> <?= htmlspecialchars($coords['lat']) ?></p>
+    <p><strong>Longitude :</strong> <?= htmlspecialchars($coords['lon']) ?></p>
 </div>
 
 </body>
