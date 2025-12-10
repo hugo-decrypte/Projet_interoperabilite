@@ -1,24 +1,26 @@
 <?php
 
-// Forçage IP de test
+function getClientIP() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    }
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+    }
+    return $_SERVER['REMOTE_ADDR'];
+}
 
-//function getClientIP() {
-//    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-//        return $_SERVER['HTTP_CLIENT_IP'];
-//    }
-//    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-//        return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-//    }
-//    return $_SERVER['REMOTE_ADDR'];
-//}
-//
-//$ip = getClientIP();
-
-$ip = "193.50.135.200";
+$ip = getClientIP();
 
 // 1. API ip-api
 $geoUrl = "http://ip-api.com/json/" . $ip;
-$geoData = json_decode(file_get_contents($geoUrl), true);
+$file = file_get_contents($geoUrl);
+if(!$file) {
+    //ip local
+    $ip = "193.50.135.199";
+    $file = file_get_contents($geoUrl);
+}
+$geoData = json_decode($file, true);
 
 $coords = [];
 
@@ -29,8 +31,16 @@ if ($geoData && $geoData["status"] === "success" && $geoData["city"] === "Nancy"
 } else {
 
     // 2. API Nominatim OpenStreetMap (si pas à Nancy)
-    $opts = array('http' => array('proxy'=> 'tcp://127.0.0.1:8080', 'request_fulluri'=> true),
-            'ssl' => array('verify_peer' => false, 'verify_peer_name' => false));
+    $opts = array(
+        'http' => array(
+            'method' => "GET",
+            'header' => "User-Agent: PHP-App/1.0\r\n"
+        ),
+        'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false
+        )
+    );
 
     $context = stream_context_create($opts);
 
