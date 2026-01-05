@@ -67,7 +67,9 @@ require_once __DIR__ . '/../action/GetCirculationInfoNancy.php';
             layer.bindPopup(`
           <strong>${feature.properties.type}</strong><br>
           ${feature.properties.description ?? ''}<br>
-          <em>${feature.properties.street ?? ''}</em>
+          <em>${feature.properties.street ?? ''}</em><br><br>
+          <b>Début : ${feature.properties.starttime ?? ''}</b><br>
+          <b>Fin : ${feature.properties.endtime ?? ''}</b>
         `);
         }
     }).addTo(map);

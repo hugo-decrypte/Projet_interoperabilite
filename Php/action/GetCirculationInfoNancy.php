@@ -40,6 +40,9 @@ foreach ($incidents as $incident) {
         ];
     }
 
+    $incident['starttime'] = date('d/m/Y', strtotime($incident['starttime']));
+    $incident['endtime'] = date('d/m/Y', strtotime($incident['endtime']));
+
     $geojson['features'][] = [
         'type' => 'Feature',
         'geometry' => $geometry,
@@ -48,8 +51,8 @@ foreach ($incidents as $incident) {
             'type' => $incident['type'] ?? null,
             'description' => $incident['description'] ?? null,
             'street' => $incident['location']['street'] ?? null,
-            'starttime' => $incident['starttime'] ?? null,
-            'endtime' => $incident['endtime'] ?? null
+            'starttime' => $incident['starttime'],
+            'endtime' => $incident['endtime']
         ]
     ];
 }
