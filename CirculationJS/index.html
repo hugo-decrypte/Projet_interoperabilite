@@ -1,0 +1,49 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nancy VeloLib - TP DWM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Nancy VeloLib - TP DWM</h1>
+
+    <div class="section">
+        <h2>Météo</h2>
+        <div id="weather-content" class="loading">Chargement...</div>
+    </div>
+
+    <div class="section">
+        <h2>Qualité de l'air</h2>
+        <div id="air-content" class="loading">Chargement...</div>
+    </div>
+
+    <div class="section">
+        <h2>Recommandation</h2>
+        <div id="recommendation-content" class="loading">Calcul en cours...</div>
+    </div>
+
+    <div class="section">
+        <h2>Carte des stations VeloLib</h2>
+        <div id="map"></div>
+    </div>
+
+    <div class="section">
+        <h2>APIs utilisées</h2>
+        <ul id="api-list" class="api-list"></ul>
+    </div>
+
+    <div class="section">
+        <h2>Lien du dépôt Github</h2>
+        <a href = "https://github.com/hugo-decrypte/Projet_interoperabilite.git"> Github </a>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
