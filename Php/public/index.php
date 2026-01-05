@@ -3,7 +3,8 @@
 require_once __DIR__ . "/../config/bootstrap.php";
 
 echo <<<END
-<a href="map.php">Accèder à la carte</a>
+<a href="map.php">Accèder à la carte</a><br>
+<a href="covid.php">Infos sur le covid 19</a>
 END;
 
 
