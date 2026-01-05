@@ -58,6 +58,8 @@ if ($geoData && $geoData["status"] === "success" && $geoData["city"] === "Nancy"
     }
 }
 
+$_SESSION['coords'] = $coords;
+
 ?>
 
 <!DOCTYPE html>

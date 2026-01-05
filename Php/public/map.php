@@ -1,6 +1,13 @@
 <?php
-$lat = 48.67103;
-$lng = 6.15083;
+require_once __DIR__ . "/../config/bootstrap.php";
+$lat = $_SESSION['coords']['lat'];
+$lng = $_SESSION['coords']['lon'];
+$geojson = [
+    'type' => 'FeatureCollection',
+    'features' => []
+];
+
+require_once __DIR__ . '/../action/GetCirculationInfoNancy.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,6 +36,7 @@ $lng = 6.15083;
 <script>
     var lat = <?php echo $lat; ?>;
     var lng = <?php echo $lng; ?>;
+    var geojson = <?php echo json_encode($geojson, JSON_UNESCAPED_UNICODE); ?>;
 
     var map = L.map('map').setView([lat, lng], 13);
 
@@ -40,6 +48,31 @@ $lng = 6.15083;
     L.marker([lat, lng]).addTo(map)
         .bindPopup("Votre position : " + lat + ", " + lng)
         .openPopup();
+
+    L.geoJSON(geojson, {
+        style: feature => {
+            // Couleur selon type
+            switch (feature.properties.type) {
+                case 'CONSTRUCTION': return { color: 'red' };
+                default: return { color: 'blue' };
+            }
+        },
+        pointToLayer: (feature, latlng) => {
+            return L.circleMarker(latlng, {
+                radius: 6,
+                fillOpacity: 0.8
+            });
+        },
+        onEachFeature: (feature, layer) => {
+            layer.bindPopup(`
+          <strong>${feature.properties.type}</strong><br>
+          ${feature.properties.description ?? ''}<br>
+          <em>${feature.properties.street ?? ''}</em><br><br>
+          <b>Début : ${feature.properties.starttime ?? ''}</b><br>
+          <b>Fin : ${feature.properties.endtime ?? ''}</b>
+        `);
+        }
+    }).addTo(map);
 </script>
 
 </body>
