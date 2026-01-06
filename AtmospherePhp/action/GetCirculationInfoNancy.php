@@ -2,7 +2,14 @@
 
 $apiCirculation = "https://carto.g-ny.eu/data/cifs/cifs_waze_v2.json";
 
-$json = file_get_contents($apiCirculation);
+$opts = array(
+    'http' => array('proxy'=> 'tcp://127.0.0.1:8080', 'request_fulluri'=> true),
+    'ssl' => array( 'verify_peer' => false, 'verify_peer_name' => false)
+);
+
+$context = stream_context_create($opts);
+
+$json = file_get_contents($apiCirculation, false, $context);
 
 if ($json === false) {
     http_response_code(500);

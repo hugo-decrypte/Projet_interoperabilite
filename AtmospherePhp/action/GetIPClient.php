@@ -32,14 +32,8 @@ if ($geoData && $geoData["status"] === "success" && $geoData["city"] === "Nancy"
 
     // 2. API Nominatim OpenStreetMap (si pas à Nancy)
     $opts = array(
-        'http' => array(
-            'method' => "GET",
-            'header' => "User-Agent: PHP-App/1.0\r\n"
-        ),
-        'ssl' => array(
-            'verify_peer' => false,
-            'verify_peer_name' => false
-        )
+        'http' => array('proxy'=> 'tcp://127.0.0.1:8080', 'request_fulluri'=> true),
+        'ssl' => array( 'verify_peer' => false, 'verify_peer_name' => false)
     );
 
     $context = stream_context_create($opts);

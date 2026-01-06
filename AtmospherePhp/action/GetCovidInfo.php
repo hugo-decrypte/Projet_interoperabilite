@@ -2,7 +2,14 @@
 
 $apiURL = "https://www.data.gouv.fr/api/1/datasets/r/d2671c6c-c0eb-4e12-b69a-8e8f87fc224c";
 
-$jsonContent = file_get_contents($apiURL);
+$opts = array(
+    'http' => array('proxy'=> 'tcp://127.0.0.1:8080', 'request_fulluri'=> true),
+    'ssl' => array( 'verify_peer' => false, 'verify_peer_name' => false)
+);
+
+$context = stream_context_create($opts);
+
+$jsonContent = file_get_contents($apiURL, false, $context);
 $data = json_decode($jsonContent, true);
 
 $dates = [];
